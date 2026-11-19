@@ -1,0 +1,6 @@
+# LAB ONLY: validate with suricata -T before loading. sid range reserved for this project.
+alert icmp any any -> any any (msg:"CODEALPHA LAB ICMP echo request"; itype:8; classtype:attempted-recon; sid:1000001; rev:1;)
+alert dns any any -> any any (msg:"CODEALPHA LAB test domain lookup"; dns.query; content:"nids-lab.example"; nocase; endswith; classtype:policy-violation; sid:1000002; rev:1;)
+alert http any any -> any any (msg:"CODEALPHA LAB HTTP training marker"; flow:established,to_server; http.uri; content:"/nids-training-check"; classtype:policy-violation; sid:1000003; rev:1;)
+# Threshold detects repeated TCP SYNs; not a definitive port scan diagnosis.
+alert tcp any any -> any any (msg:"CODEALPHA LAB repeated TCP SYN"; flags:S; flow:stateless; threshold:type both, track by_src, count 12, seconds 20; classtype:attempted-recon; sid:1000004; rev:1;)
